@@ -14,6 +14,10 @@
 
 int	main(void)
 {
-	ft_putstr_fd("server\n", 1);
+	int pid;
+
+	pid = getpid();
+	ft_putstr_fd("server, PID is : \n", 1);
+	ft_putnbr_fd(pid, 1);
 	return (0);
 }
