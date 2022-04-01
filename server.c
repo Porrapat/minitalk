@@ -2,6 +2,6 @@
 
 int main()
 {
-	printf("server\n");
+	ft_putstr_fd("server\n", 1);
 	return (0);
 }
