@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_UTILS_H
-# define FT_UTILS_H
+#ifndef MINITALK_H
+# define MINITALK_H
 
 # include <unistd.h>
 # include <stdlib.h>
