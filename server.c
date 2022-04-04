@@ -17,6 +17,7 @@ static void	server_action(int sig, siginfo_t *info, void *context)
 	static int				i = 7;
 	static unsigned char	c = 0;
 
+	(void)context;
 	if (sig == SIGUSR1)
 	{
 		c |= (1 << i--);
