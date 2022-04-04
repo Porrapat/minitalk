@@ -11,20 +11,6 @@
 /* ************************************************************************** */
 
 #include "minitalk.h"
-#include <limits.h>
-#include <stdio.h>
-
-char *chartobin ( unsigned char c )
-{
-    static char bin[CHAR_BIT + 1] = {0};
-    int i;
-    for( i = CHAR_BIT - 1; i >= 0; i-- )
-    {
-        bin[i] = (c % 2) + '0';
-        c /= 2;
-    }
-   	return bin;
-}
 
 static void	server_action(int sig, siginfo_t *info, void *context)
 {
@@ -32,12 +18,19 @@ static void	server_action(int sig, siginfo_t *info, void *context)
 	static unsigned char	c = 0;
 
 	if (sig == SIGUSR1)
+	{
 		c |= (1 << i--);
+		kill(info->si_pid, SIGUSR1);
+	}
 	else if (sig == SIGUSR2)
+	{
 		c |= (0 << i--);
+		kill(info->si_pid, SIGUSR1);
+	}
 	if (i == -1)
 	{
 		ft_putchar_fd(c, 1);
+		kill(info->si_pid, SIGUSR2);
 		i = 7;
 		c = 0;
 	}
@@ -48,8 +41,6 @@ int	main(void)
 	int					pid;
 	struct sigaction	s_sigaction;
 
-	// test_print_binary();
-
 	ft_memset(&s_sigaction, 0, sizeof(s_sigaction));
 	pid = getpid();
 	ft_putstr_fd("Server, PID is : ", 1);
@@ -59,7 +50,6 @@ int	main(void)
 	s_sigaction.sa_flags = SA_SIGINFO;
 	sigaction(SIGUSR1, &s_sigaction, 0);
 	sigaction(SIGUSR2, &s_sigaction, 0);
-
 	while (1)
 		pause();
 	return (0);
