@@ -25,26 +25,22 @@ static void	client_action(int sig, siginfo_t *info, void *context)
 	c = *(current_str + shifted_byte);
 	if (sig == SIGUSR1)
 	{
-		ft_putstr_fd("SIGUSR1\n", 1);
 		if ((c << shifted_bit++) & 0x80)
 			kill(server_pid, SIGUSR1);
 		else
 			kill(server_pid, SIGUSR2);
-		if (shifted_bit == 8)
-		{
-			shifted_bit = 0;
-			shifted_byte++;
-		}
 	}
 	else if (sig == SIGUSR2)
 	{
-		// c |= (0 << i--);
-		// kill(info->si_pid, SIGUSR1);
 		shifted_bit = 0;
 		shifted_byte++;
-		ft_putstr_fd("SIGUSR2\n", 1);
 		if (*(current_str + shifted_byte) == '\0')
+		{
+			ft_putstr_fd("Send Complete! Byte sent : ", 1);
+			ft_putnbr_fd(shifted_byte, 1);
+			ft_putstr_fd("\n", 1);
 			exit(0);
+		}
 	}
 }
 
