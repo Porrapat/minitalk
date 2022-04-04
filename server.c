@@ -28,34 +28,19 @@ char *chartobin ( unsigned char c )
 
 static void	server_action(int sig, siginfo_t *info, void *context)
 {
-	// kill -s 10 <pid>
-	// kill -s 12 <pid>
-
 	static int				i = 7;
 	static unsigned char	c = 0;
 
-	// printf("Bin 42 is %s\n", chartobin(42));
-	// ft_putstr_fd("Hey Recieved From : ", 1);
-	// ft_putnbr_fd(info->si_pid, 1);
-	// ft_putstr_fd("\n", 1);
 	if (sig == SIGUSR1)
-	{
-		// ft_putstr_fd("SIGUSR2\n", 1);
 		c |= (1 << i--);
-	}
 	else if (sig == SIGUSR2)
-	{
 		c |= (0 << i--);
-		// ft_putstr_fd("SIGUSR1\n", 1);
-	}
-	printf("Bin 42 is %s\n", chartobin(c));
 	if (i == -1)
 	{
-		printf("Char is %c\n", c);
+		ft_putchar_fd(c, 1);
 		i = 7;
 		c = 0;
 	}
-	// if(sig = SI)
 }
 
 int	main(void)
