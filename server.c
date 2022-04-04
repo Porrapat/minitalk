@@ -13,6 +13,7 @@
 #include "minitalk.h"
 #include <limits.h>
 #include <stdio.h>
+
 char *chartobin ( unsigned char c )
 {
     static char bin[CHAR_BIT + 1] = {0};
@@ -25,23 +26,36 @@ char *chartobin ( unsigned char c )
    	return bin;
 }
 
-// void test_print_binary(void) {
-// 	char a = 42;
-// 	int i;
-// 	for (i = 0; i < 8; i++) {
-// 	//	ft_putnbr_fd(((a << i) & 0x80), 1);
-// 	//	ft_putstr_fd("x", 1);
-// 		ft_putnbr_fd(!!((a << i) & 0x80), 1);
-// 	}
-// 	ft_putstr_fd("\n", 1);
-// }
-
 static void	server_action(int sig, siginfo_t *info, void *context)
 {
 	// kill -s 10 <pid>
 	// kill -s 12 <pid>
-	printf("Bin 42 is %s\n", chartobin(42));
-	ft_putstr_fd("Hey Recieved : \n", 1);
+
+	static int				i = 7;
+	static unsigned char	c = 0;
+
+	// printf("Bin 42 is %s\n", chartobin(42));
+	// ft_putstr_fd("Hey Recieved From : ", 1);
+	// ft_putnbr_fd(info->si_pid, 1);
+	// ft_putstr_fd("\n", 1);
+	if (sig == SIGUSR1)
+	{
+		// ft_putstr_fd("SIGUSR2\n", 1);
+		c |= (1 << i--);
+	}
+	else if (sig == SIGUSR2)
+	{
+		c |= (0 << i--);
+		// ft_putstr_fd("SIGUSR1\n", 1);
+	}
+	printf("Bin 42 is %s\n", chartobin(c));
+	if (i == -1)
+	{
+		printf("Char is %c\n", c);
+		i = 7;
+		c = 0;
+	}
+	// if(sig = SI)
 }
 
 int	main(void)
