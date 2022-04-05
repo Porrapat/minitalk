@@ -26,33 +26,53 @@ char *chartobin ( unsigned char c )
    return bin;
 }
 
-static void	server_action(int sig, siginfo_t *info, void *context)
-{
-	static int				i = 7;
-	static unsigned char	c = 0;
+// static void	server_action(int sig, siginfo_t *info, void *context)
+// {
+// 	static int				i = 7;
+// 	static unsigned char	c = 0;
 
-	// '0' is 00110000
-	(void)context;
+// 	// '0' is 00110000
+// 	(void)context;
 
-	ft_putstr_fd("i is ", 1);
-	ft_putnbr_fd(i, 1);
-	ft_putstr_fd("\n", 1);
-	if (i <= -1)
-	{
+// 	ft_putstr_fd("i is ", 1);
+// 	ft_putnbr_fd(i, 1);
+// 	ft_putstr_fd("\n", 1);
+// 	if (i <= -1)
+// 	{
 		
-		write(1, &c, 1);
+// 		write(1, &c, 1);
+// 		i = 7;
+// 		c = 0;
+// 		kill(info->si_pid, SIGUSR2);
+// 	}
+// 	else
+// 	{
+// 		if (sig == SIGUSR1)
+// 			c |= (1 << i--);
+// 		else
+// 			c |= (0 << i--);
+// 		kill(info->si_pid, SIGUSR1);
+// 	}
+// }
+
+void	server_action(int sig, siginfo_t *info, void *context)
+{
+	static unsigned char	c = 0;
+	static int	i = -1;
+
+	(void)context;
+	if (i < 0)
 		i = 7;
-		c = 0;
+	if (sig == SIGUSR1)
+		c |= 1 << i;
+	else if (sig == SIGUSR2)
+		c &= ~(1 << i);
+	if (!i && c)
+		ft_putchar_fd(c, 1);
+	else if (!i && !c)
 		kill(info->si_pid, SIGUSR2);
-	}
-	else
-	{
-		if (sig == SIGUSR1)
-			c |= (1 << i--);
-		else
-			c |= (0 << i--);
-		kill(info->si_pid, SIGUSR1);
-	}
+	i--;
+	kill(info->si_pid, SIGUSR1);
 }
 
 int	main(void)
@@ -66,7 +86,7 @@ int	main(void)
 	ft_putnbr_fd(pid, 1);
 	ft_putstr_fd("\n", 1);
 	s_sigaction.sa_sigaction = server_action;
-	s_sigaction.sa_flags = SA_SIGINFO;
+	s_sigaction.sa_flags = SA_SIGINFO | SA_RESTART | SA_NODEFER;
 	sigaction(SIGUSR1, &s_sigaction, 0);
 	sigaction(SIGUSR2, &s_sigaction, 0);
 	while (1)
