@@ -25,7 +25,6 @@ int	send_char(char p_c, pid_t p_pid)
 	}
 	if (i < 0)
 		i = 7;
-
 	if (pid <= 0 || kill(pid, 0) < 0)
 	{
 		ft_putendl_fd("Invalid Process ID.", 1);
@@ -90,7 +89,7 @@ int	main(int argc, char **argv)
 	s_sigaction.sa_flags = SA_SIGINFO;
 	sigaction(SIGUSR1, &s_sigaction, 0);
 	sigaction(SIGUSR2, &s_sigaction, 0);
-	if(argv[1][0] == '0')
+	if (argv[1][0] == '0')
 	{
 		ft_putendl_fd("Not support file descriptor 0.", 1);
 		return (0);
