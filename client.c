@@ -87,7 +87,7 @@ int	main(int argc, char **argv)
 		return (1);
 	}
 	s_sigaction.sa_sigaction = client_action;
-	s_sigaction.sa_flags = SA_SIGINFO;
+	s_sigaction.sa_flags = SA_SIGINFO | SA_RESTART | SA_NODEFER;
 	sigaction(SIGUSR1, &s_sigaction, 0);
 	sigaction(SIGUSR2, &s_sigaction, 0);
 	if (argv[1][0] == '0')

@@ -42,7 +42,7 @@ int	main(void)
 	ft_putnbr_fd(pid, 1);
 	ft_putstr_fd("\n", 1);
 	s_sigaction.sa_sigaction = server_action;
-	s_sigaction.sa_flags = SA_SIGINFO;
+	s_sigaction.sa_flags = SA_SIGINFO | SA_RESTART | SA_NODEFER;
 	sigaction(SIGUSR1, &s_sigaction, 0);
 	sigaction(SIGUSR2, &s_sigaction, 0);
 	while (1)
