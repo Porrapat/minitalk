@@ -12,11 +12,11 @@
 
 #include "minitalk.h"
 
-int	send_char(char p_c, pid_t p_pid)
+int	send_character(char p_c, int p_pid)
 {
 	static int		i = -1;
 	static char		c;
-	static pid_t	pid;
+	static int		pid;
 
 	if (p_pid)
 	{
@@ -38,37 +38,37 @@ int	send_char(char p_c, pid_t p_pid)
 	return (i);
 }
 
-void	send_str(char *p_str, pid_t p_pid)
+void	send_string(char *p_str, int p_pid)
 {
 	static int		cur = 0;
 	static char		*str;
-	static pid_t	pid;
-	static int		bit = -1;
+	static int		pid;
+	static int		i = -1;
 
 	if (p_pid)
 	{
 		str = p_str;
 		pid = p_pid;
 	}
-	if (bit < 0)
+	if (i < 0)
 	{
 		if (str[cur])
 		{
-			bit = send_char(str[cur], pid);
+			i = send_character(str[cur], pid);
 			cur++;
 		}
 		else
-			bit = send_char(0, pid);
+			i = send_character(0, pid);
 	}
 	else
-		bit = send_char(0, 0);
+		i = send_character(0, 0);
 }
 
 void	client_action(int sig, siginfo_t *info, void *context)
 {
 	(void)context;
 	if (sig == SIGUSR1)
-		send_str("", 0);
+		send_string("", 0);
 	else if (sig == SIGUSR2)
 		exit(0);
 }
@@ -76,7 +76,7 @@ void	client_action(int sig, siginfo_t *info, void *context)
 int	main(int argc, char **argv)
 {
 	struct sigaction	s_sigaction;
-	pid_t				pid;
+	int					pid;
 
 	ft_memset(&s_sigaction, 0, sizeof(s_sigaction));
 	if (argc != 3 || !ft_strlen(argv[2]))
@@ -95,7 +95,7 @@ int	main(int argc, char **argv)
 		return (0);
 	}
 	pid = ft_atoi(argv[1]);
-	send_str(argv[2], pid);
+	send_string(argv[2], pid);
 	while (1)
 		pause();
 	return (0);
