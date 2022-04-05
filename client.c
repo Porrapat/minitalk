@@ -67,6 +67,7 @@ void	send_string(char *p_str, int p_pid)
 void	client_action(int sig, siginfo_t *info, void *context)
 {
 	(void)context;
+	(void)info;
 	if (sig == SIGUSR1)
 		send_string("", 0);
 	else if (sig == SIGUSR2)
