@@ -64,10 +64,8 @@ void	send_string(char *p_str, int p_pid)
 		i = send_character(0, 0);
 }
 
-void	client_action(int sig, siginfo_t *info, void *context)
+void	client_action(int sig)
 {
-	(void)context;
-	(void)info;
 	if (sig == SIGUSR1)
 		send_string("", 0);
 	else if (sig == SIGUSR2)
@@ -76,20 +74,16 @@ void	client_action(int sig, siginfo_t *info, void *context)
 
 int	main(int argc, char **argv)
 {
-	struct sigaction	s_sigaction;
-	int					pid;
+	int	pid;
 
-	ft_memset(&s_sigaction, 0, sizeof(s_sigaction));
 	if (argc != 3 || !ft_strlen(argv[2]))
 	{
 		ft_putendl_fd("Using with:", 1);
 		ft_putendl_fd("./client <process_id> <message>", 1);
 		return (1);
 	}
-	s_sigaction.sa_sigaction = client_action;
-	s_sigaction.sa_flags = SA_SIGINFO | SA_RESTART | SA_NODEFER;
-	sigaction(SIGUSR1, &s_sigaction, 0);
-	sigaction(SIGUSR2, &s_sigaction, 0);
+	signal(SIGUSR1, &client_action);
+	signal(SIGUSR2, &client_action);
 	if (argv[1][0] == '0')
 	{
 		ft_putendl_fd("Not support file descriptor 0.", 1);
