@@ -1,3 +1,7 @@
+NAME = minitalk
+
+$(NAME): all
+
 all: client server
 
 client:
@@ -10,6 +14,8 @@ clean:
 fclean: clean
 	rm -rf client
 	rm -rf server
+
+bonus: re all
 
 re: fclean all
 
